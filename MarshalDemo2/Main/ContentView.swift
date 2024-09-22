@@ -17,8 +17,11 @@ struct ContentView: View {
 		VStack {
 			Picker(selection: $page) {
 				Text("Wallet")
+					.tag(Page.wallet)
 				Text("Store")
+					.tag(Page.store)
 				Text("History")
+					.tag(Page.history)
 			} label: {
 				EmptyView()
 			}
