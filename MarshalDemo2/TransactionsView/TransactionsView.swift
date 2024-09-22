@@ -11,7 +11,9 @@ struct TransactionsView: View {
 			}
 		}
 		.task {
-			await model.load()
+			if NSClassFromString("XCTest") == nil {
+				await model.load()
+			}
 		}
 	}
 }

@@ -3,12 +3,7 @@ import Foundation
 
 struct CurrencyResponse: Codable {
 	var date: String
-	var eur: [Currency]
-}
-
-struct Currency: Codable {
-	var name: String
-	var value: Double
+	var eur: [String: Double]
 }
 
 @MainActor
@@ -33,9 +28,7 @@ class Currencies : ObservableObject {
 		do {
 			let request = try endpoint.request(for: "currencies/eur.json")
 			let response = try await request.send(type: CurrencyResponse.self)
-			response.eur.forEach { currency in
-				currencies[currency.name] = currency.value
-			}
+			self.currencies = response.eur
 		}
 		catch {
 			

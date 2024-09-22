@@ -8,18 +8,38 @@ enum HttpMethod: String {
 }
 
 protocol Endpoint {
-	func request(for endpoint: String, method: HttpMethod?, withPayload payload: Data?) throws -> URLRequest
+	func request(for endpoint: String, method: HttpMethod?, withPayload payload: Data?) throws -> Request
 }
 
 extension Endpoint {
-	func request(for endpoint: String) throws -> URLRequest {
+	func request(for endpoint: String) throws -> Request {
 		try self.request(for: endpoint, method: .get, withPayload: nil)
 	}
-	func request(for endpoint: String, method: HttpMethod) throws -> URLRequest {
+	func request(for endpoint: String, method: HttpMethod) throws -> Request {
 		try self.request(for: endpoint, method: method, withPayload: nil)
 	}
-	func request(for endpoint: String, method: HttpMethod?, withPayload payload: Data?) throws -> URLRequest {
-		try self.request(for: endpoint, method: method, withPayload: payload)
+}
+
+protocol Request {
+	func send<T: Decodable>(type: T.Type) async throws -> T
+}
+
+struct JSONRequest : Request {
+	var returnedJson: Data
+	
+	init(json: String) {
+		self.returnedJson = json.data(using: .utf8)!
+	}
+	
+	func send<T>(type: T.Type) async throws -> T where T : Decodable {
+		do {
+			let decoder = JSONDecoder()
+			return try decoder.decode(T.self, from: returnedJson)
+		}
+		catch let DecodingError.dataCorrupted(context) {
+			print(context)
+		}
+		throw URLEndpoint.BackendError.generalError(message: "Failed to parse JSON")
 	}
 }
 
@@ -30,16 +50,13 @@ class JSONEndpoint: Endpoint {
 		self.returnValue = json
 	}
 
-	func request(for endpoint: String, method: HttpMethod?, withPayload payload: Data?) throws -> URLRequest {
-		var request = URLRequest(url: URL(string: endpoint)!)
-		request.httpMethod = method?.rawValue
-		request.httpBody = payload
-		return request
+	func request(for endpoint: String, method: HttpMethod?, withPayload payload: Data?) throws -> Request {
+		return JSONRequest(json: returnValue)
 	}
 }
 
 class URLEndpoint : Endpoint {
-	
+
 	fileprivate enum HttpStatusCode: Int {
 		case ok = 200
 		case unauthorized = 401
@@ -58,7 +75,7 @@ class URLEndpoint : Endpoint {
 		self.baseUrl = baseURL
 	}
 	
-	func request(for endpoint: String, method: HttpMethod? = .get, withPayload payload: Data? = nil) throws -> URLRequest {
+	func request(for endpoint: String, method: HttpMethod?, withPayload payload: Data?) throws -> any Request {
 		
 		let url = URL(string: "\(baseUrl)/\(endpoint)")!
 		var request = URLRequest(url: url)
@@ -82,24 +99,26 @@ class URLEndpoint : Endpoint {
 				print("[Network]     \(key): \(value)")
 			}
 		}
-		return request
+		return RealRequest(request: request)
 	}
 }
 
-extension URLRequest {
-	func send<T: Decodable>(type: T.Type, printPayload: Bool = true) async throws -> T {
+struct RealRequest: Request {
+	var request: URLRequest
+	
+	init(request: URLRequest) {
+		self.request = request
+	}
+	func send<T: Decodable>(type: T.Type) async throws -> T {
 		
-		let (data, response) = try await URLSession.shared.data(for: self)
+		let (data, response) = try await URLSession.shared.data(for: request)
 		guard let httpResponse = response as? HTTPURLResponse else {
 			print("[Network] Response: Invalid response type \(String(describing: response))")
 			throw URLEndpoint.BackendError.generalError(message: "Invalid response")
 		}
 		print("[Network] Response: Status code \(httpResponse.statusCode)")
-		if printPayload {
-			print("[Network] Response Payload: \(data.prettyPrintedJSONString)")
-		}
 		if httpResponse.statusCode != URLEndpoint.HttpStatusCode.ok.rawValue {
-			throw URLEndpoint.BackendError.httpError(statusCode: httpResponse.statusCode, endpoint: self.url?.absoluteString ?? "Unknown")
+			throw URLEndpoint.BackendError.httpError(statusCode: httpResponse.statusCode, endpoint: request.url?.absoluteString ?? "Unknown")
 		}
 		do {
 			let decoder = JSONDecoder()
@@ -123,6 +142,6 @@ extension URLRequest {
 		catch {
 			print("error: ", error)
 		}
-		throw URLEndpoint.BackendError.generalError(message: "Failed to parse response from endpoint \(self.url?.absoluteString ?? "Unknown")")
+		throw URLEndpoint.BackendError.generalError(message: "Failed to parse response from endpoint \(request.url?.absoluteString ?? "Unknown")")
 	}
 }

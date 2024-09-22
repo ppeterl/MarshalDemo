@@ -60,7 +60,7 @@ struct Item : Codable, Identifiable {
 		self.volume = (try? container.decode(String.self, forKey: .volume)) ?? ""
 		self.bidPrice = (try? container.decode(String.self, forKey: .bidPrice)) ?? ""
 		self.askPrice = (try? container.decode(String.self, forKey: .askPrice)) ?? ""
-		if let at = try? container.decode(Int.self, forKey: .askPrice) {
+		if let at = try? container.decode(Int64.self, forKey: .at) {
 			self.at = Date(timeIntervalSince1970: TimeInterval(at))
 		}
 		else {
