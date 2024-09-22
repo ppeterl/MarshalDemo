@@ -1,10 +1,3 @@
-//
-//  MarshalDemo2UITests.swift
-//  MarshalDemo2UITests
-//
-//  Created by Peter Larsson on 2024-09-21.
-//
-
 import XCTest
 
 final class MarshalDemo2UITests: XCTestCase {

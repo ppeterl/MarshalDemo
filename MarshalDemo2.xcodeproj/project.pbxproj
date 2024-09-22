@@ -35,14 +35,14 @@
 			path = MarshalDemo2;
 			sourceTree = "<group>";
 		};
-		A004A0942C9F2AA70010A411 /* MarshalDemo2Tests */ = {
+		A004A0942C9F2AA70010A411 /* Unit Tests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MarshalDemo2Tests;
+			path = "Unit Tests";
 			sourceTree = "<group>";
 		};
-		A004A09E2C9F2AA70010A411 /* MarshalDemo2UITests */ = {
+		A004A09E2C9F2AA70010A411 /* UITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MarshalDemo2UITests;
+			path = UITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -76,8 +76,8 @@
 			isa = PBXGroup;
 			children = (
 				A004A0832C9F2AA50010A411 /* MarshalDemo2 */,
-				A004A0942C9F2AA70010A411 /* MarshalDemo2Tests */,
-				A004A09E2C9F2AA70010A411 /* MarshalDemo2UITests */,
+				A004A0942C9F2AA70010A411 /* Unit Tests */,
+				A004A09E2C9F2AA70010A411 /* UITests */,
 				A004A0822C9F2AA50010A411 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -131,7 +131,7 @@
 				A004A0932C9F2AA70010A411 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				A004A0942C9F2AA70010A411 /* MarshalDemo2Tests */,
+				A004A0942C9F2AA70010A411 /* Unit Tests */,
 			);
 			name = MarshalDemo2Tests;
 			packageProductDependencies = (
@@ -154,7 +154,7 @@
 				A004A09D2C9F2AA70010A411 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				A004A09E2C9F2AA70010A411 /* MarshalDemo2UITests */,
+				A004A09E2C9F2AA70010A411 /* UITests */,
 			);
 			name = MarshalDemo2UITests;
 			packageProductDependencies = (
@@ -395,7 +395,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MarshalDemo2/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"MarshalDemo2/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = ZF488Z9PZP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -424,7 +424,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MarshalDemo2/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"MarshalDemo2/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = ZF488Z9PZP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
