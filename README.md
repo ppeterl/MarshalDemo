@@ -8,4 +8,5 @@ Intention is to build a sample app with three views:
 The exercice was timeboxed to about five hours.
 
 **Evaluation**
+
 Well, five hour was not nearly enough. Most focus was spent on refining the Endpoint class, which offers easy to use REST calls, and the option to mock calls in unit testing.
